@@ -1,8 +1,10 @@
 export default class DOMHelper {
   #domNode;
   #domTextNode;
-  createElement(elementType) {
+  createElement(elementType, {attributes}) {
     this.#domNode = document.createElement(elementType);
+    attributes.reduce((acc, [attributeName, attributeValue]) => 
+      acc.setAttrbute(attributeName, attributeValue), this);
     return this;
   }
 

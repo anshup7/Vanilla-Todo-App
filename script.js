@@ -14,25 +14,17 @@ const insertField = new Element("insert_text_field");
 
 addButton.addEventListener("click", () => {
   console.log("Add event clicked");
-  const liNode = listContainer.DOM
-    .createElement("li")
-    .setAttrbute("id", insertField.value)
-    .createTextNode(insertField.value)
-    .appendTextNodeChild()
-    .node;
-  listContainer.el.appendChild(listContainer.DOM.node);
-
+  // since the node is created by element class, DOM will contain reference to created Node's wrapper class for helper. i.e this.#element == this.DOM.node in the Element class. 
+  let liNode = new Element(insertField.value, "id", "li");
+  const DOMLiNode = liNode.DOM.createTextNode(insertField.value).appendTextNodeChild().node;
+  listContainer.el.appendChild(DOMLiNode);
   // Same process as above can be reinstated as the above "domNode" is now added to the DOM. We are just playing with classes.
 
-
-  const checkBoxNode = listContainer.DOM.createElement("input")
-    .setAttrbute("type", "checkbox")
-    .setAttrbute("id", `${insertField.value}_checkbox_${listContainer.rand}`)
-    .setAttrbute("name", `${insertField.value}_checkbox`)
-    .node;
+  let checkBoxNode = new Element(`${insertField.value}_checkbox_${liNode.rand}`, "id", "input");
+  checkBoxNode.DOM.setAttrbute("type", "checkbox").setAttrbute("name", `${insertField.value}_checkbox`);
 
   // these liNode and checkBoxNode are open objects, they should come via the class.
-  liNode.appendChild(checkBoxNode);
+  liNode.DOM.appendChild(checkBoxNode.node);
 
   liNode.addEventListener("click", (e) => { // this is getting set directly by dom as the liNode is an open reference. The current code structure is not perfectly modular. Beware!! and fix this
     const id = e.target.id;
