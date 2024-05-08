@@ -7,6 +7,7 @@ export default class Element extends DOMAdapter {
   constructor(attributeValue, attributeType = "id", elementName="") {
     super();
     this.#dom = new DOMHelper();
+    this.itemsToRemove = [];
     switch (attributeType) {
       case "id": {
         this.#element = DOMAdapter.getDOMElementById(attributeValue);
@@ -34,14 +35,16 @@ export default class Element extends DOMAdapter {
     }
   }
 
-  addEventListener(onEvent, callback) {
-    DOMAdapter.addEventListener(this.#element, onEvent, callback);
+  addForRemoval() {
+    DOMAdapter.itemsToRemove = this.el;
   }
 
-  // change this, above add event listener is getting repeated
+  removeDOMNodes(_) { // buttons will mostly call this. Nodes will not call as per design
+    for(let each of DOMAdapter.itemsToRemove) {
+      each.remove();
+    }
 
-  addEventListenerOnDOM() {
-    return document;
+    DOMAdapter.resetItemsToRemove();
   }
 
   get DOM() {

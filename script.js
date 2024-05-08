@@ -8,11 +8,14 @@ const listContainer = new Element("list_container");
 
 const addButton = new Element("add_item_button");
 
+const removeButton = new Element("remove_item_button");
+
+
 const insertField = new Element("insert_text_field");
 
-// The following is causing memory leaks fix it;
 
-addButton.addEventListener("click", () => {
+
+addButton.el.addEventListener("click", () => {
   console.log("Add event clicked");
   // since the node is created by element class, DOM will contain reference to created Node's wrapper class for helper. i.e this.#element == this.DOM.node in the Element class. 
   let liNode = new Element(insertField.value, "id", "li");
@@ -24,14 +27,22 @@ addButton.addEventListener("click", () => {
   checkBoxNode.DOM.setAttrbute("type", "checkbox").setAttrbute("name", `${insertField.value}_checkbox`);
 
   // these liNode and checkBoxNode are open objects, they should come via the class.
-  liNode.DOM.appendChild(checkBoxNode.node);
+  liNode.el.appendChild(checkBoxNode.el);
 
-  liNode.addEventListener("click", (e) => { // this is getting set directly by dom as the liNode is an open reference. The current code structure is not perfectly modular. Beware!! and fix this
-    const id = e.target.id;
-    const parent = new Element(id.split("_")[0]);
-    parent.el.remove(); // if same is added again this is not working check why?
-  });
+  console.log(liNode.el, liNode.DOM.node);
+
+  // liNode.el.addEventListener("click", (event) => listNodeRemoveListener(event, liNode))
+
+  /**
+   * Or the following with more UX friendly way
+   */
+
+  liNode.el.addEventListener("click", (e) => liNode.addForRemoval())
 });
+
+removeButton.el.addEventListener("click", removeButton.removeDOMNodes)
+
+
 
 
 
